@@ -33,7 +33,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_Run_pre.clicked.connect(self.BandPass)
         self.pushButton.clicked.connect(self.parameter_default)
         self.spinBox_slice.valueChanged.connect(self.visual_touch)
-
+        self.pushButton_Expand.clicked.connect(self.Expand)
+        
     def ope(self):       
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -87,7 +88,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         elif typefilt == 1:
             rawbf = ims.butter_bandpass_filter2(raw,fl,fh,fs,order=orde)
         
-        
+        self.comboBox_4.addItem('Band Pass Filtered Image')
         return rawbf
         
 
@@ -115,7 +116,13 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
        
         return lum_img
 
-
+    def Expand(self):
+        nmin = float(self.lineEdit_min_scroll.text())
+        nmax = float(self.lineEdit_max_scroll.text())
+        plt.close(1)
+        plt.imshow(expa,str(self.comboBoxCmaps.currentText()), clim=(nmin, nmax))
+        plt.show()
+        
     
     def init_vis(self,draw):
         n1 =int(self.lineEdit_size1.text())
@@ -140,6 +147,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     
     
     def visualization(self,d2image):
+        global expa
+        expa = d2image
+        
         nmin = float(self.lineEdit_min_scroll.text())
         nmax = float(self.lineEdit_max_scroll.text())
         
@@ -229,8 +239,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def Clear_combobox(self):
         self.comboBox_4.clear()
         self.comboBox_4.addItem('Raw Image')
-        self.comboBox_4.addItem('Band Pass Filtered Image')
-        
+         
         
     
     def comboboxchange(self):
